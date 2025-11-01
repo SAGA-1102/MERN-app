@@ -5,7 +5,7 @@ pipeline {
     AWS_ACCOUNT_ID = '975050024946'
     AWS_REGION = 'ca-central-1'
     ECR_URL = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com"
-    DOCKER_BUILDKIT = '0' 
+    DOCKER_BUILDKIT = '0' // 👈 disables Buildx to avoid exec format error
   }
 
   stages {
