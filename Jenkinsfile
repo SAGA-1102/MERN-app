@@ -23,6 +23,13 @@ pipeline {
       }
     }
 
+    stage('Debug AWS CLI') {
+  steps {
+    sh 'aws --version'
+    sh 'aws sts get-caller-identity || echo "Failed to get identity"'
+  }
+}
+
     stage('Authenticate to ECR') {
       steps {
         withCredentials([[
