@@ -1,0 +1,18 @@
+services:
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - helloservice
+      - profileservice
+
+  helloservice:
+    build: ./backend/helloService
+    ports:
+      - "5001:5000"
+
+  profileservice:
+    build: ./backend/profileService
+    ports:
+      - "5002:5000"
