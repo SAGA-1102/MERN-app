@@ -17,7 +17,7 @@ pipeline {
 
     stage('Build Docker Images') {
       steps {
-        sh 'docker build -t frontend-saga ./frontend'
+        sh 'docker build -t frontend-saga ./frontend/public'
         sh 'docker build -t helloservice-saga ./backend/helloService'
         sh 'docker build -t profileservice-saga ./backend/profileService'
       }
