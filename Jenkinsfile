@@ -8,7 +8,7 @@ pipeline {
   }
 
   stages {
-    stage('Checkout') {
+    stage('Checkout from GitHub') {
       steps {
         git url: 'https://github.com/SAGA-1102/MERN-app.git', branch: 'main'
       }
