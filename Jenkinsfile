@@ -34,7 +34,7 @@ stage('Authenticate to ECR') {
   steps {
     withCredentials([[
       $class: 'AmazonWebServicesCredentialsBinding',
-      credentialsId: 'JL_AWS_CREDENTIALS' // 👈 replace with your actual credential ID
+      credentialsId: 'aws-creds123' // 👈 replace with your actual credential ID
     ]]) {
       sh '''
         aws ecr get-login-password --region ca-central-1 | docker login --username AWS --password-stdin 975050024946.dkr.ecr.ca-central-1.amazonaws.com
