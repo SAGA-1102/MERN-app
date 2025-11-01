@@ -30,13 +30,16 @@ pipeline {
   }
 }
 
- stage('Authenticate to ECR') {
+stage('Authenticate to ECR') {
   steps {
-    sh '''
-      export AWS_ACCESS_KEY_ID=your-access-key
-      export AWS_SECRET_ACCESS_KEY=your-secret-key
-      aws ecr get-login-password --region ca-central-1 | docker login --username AWS --password-stdin 975050024946.dkr.ecr.ca-central-1.amazonaws.com
-    '''
+    withCredentials([[
+      $class: 'AmazonWebServicesCredentialsBinding',
+      credentialsId: 'JL_AWS_CREDENTIALS' // 👈 replace with your actual credential ID
+    ]]) {
+      sh '''
+        aws ecr get-login-password --region ca-central-1 | docker login --username AWS --password-stdin 975050024946.dkr.ecr.ca-central-1.amazonaws.com
+      '''
+    }
   }
 }
 
