@@ -4,6 +4,7 @@ pipeline {
   environment {
     AWS_ACCOUNT_ID = '975050024946'
     AWS_REGION = 'ca-central-1'
+    ECR_URL = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com"
   }
 
   stages {
@@ -21,19 +22,25 @@ pipeline {
       }
     }
 
+    stage('Authenticate to ECR') {
+      steps {
+        sh "aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${ECR_URL}"
+      }
+    }
+
+    stage('Tag Docker Images') {
+      steps {
+        sh "docker tag frontend-saga:latest ${ECR_URL}/frontend-saga:latest"
+        sh "docker tag helloservice-saga:latest ${ECR_URL}/helloservice-saga:latest"
+        sh "docker tag profileservice-saga:latest ${ECR_URL}/profileservice-saga:latest"
+      }
+    }
+
     stage('Push to ECR') {
       steps {
-        sh '''
-          aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
-
-          docker tag frontend-saga:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/frontend-saga:latest
-          docker tag helloservice-saga:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/helloservice-saga:latest
-          docker tag profileservice-saga:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/profileservice-saga:latest
-
-          docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/frontend-saga:latest
-          docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/helloservice-saga:latest
-          docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/profileservice-saga:latest
-        '''
+        sh "docker push ${ECR_URL}/frontend-saga:latest"
+        sh "docker push ${ECR_URL}/helloservice-saga:latest"
+        sh "docker push ${ECR_URL}/profileservice-saga:latest"
       }
     }
   }
